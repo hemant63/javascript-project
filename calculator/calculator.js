@@ -1,75 +1,99 @@
 const buttons=document.getElementsByClassName('button');
-let string=document.getElementById('output').value || " ";
+let string= document.getElementById("output").value || "";
 const operator=['+','-','*','/','%']
 const inputs=['1','2','3','4','5','6','7','8','9','0','+','-','*','/','%']
 
-// function validate(key){
-//     if(inputs.includes(key)){
-//         string += key
-//     } 
-//     console.log(string)
-//     document.getElementById('output').value = string;
-// }
+//Event to focus on input field
+document.getElementById('body').addEventListener('keydown',(e)=>{
+    document.getElementById('output').focus()
+    append(e.key)
+    e.returnValue=false
+    // if(inputs.includes(e.key)){
+    // } 
+    // else{
+    //     e.returnValue=false
+    // }
+})
 
-
-function stringCheck(string){
-    
-    if(operator.includes(string[string.length-1])){
-
-        let prevString=string.substr(0,(string.length-1))
-        let newOperator=string[string.length-1]
-        let newString=prevString.replace(prevString[prevString.length-1],newOperator)
-
-        if(operator.includes(string[string.length-3])){
-            string=prevString
+//onKeyPress Event
+function keyboard(e){
+    if(inputs.includes(e.key)){
+        append(e.key)     
+    } 
+    else if(e.key=='Enter'){
+        try{
+            string=eval(string)
+        } catch(err){
+            return string
         }
+    } 
+    else if(e.key=='Backspace'){
+        string=string.substring(0,(string.length-1))
+    } else{
+            e.returnValue=false
+        }
+    console.log(string);
+    document.getElementById('output').value=string
+}
 
-        if(operator.includes(string[string.length-2])){
-            if(operator.includes(string[string.length-2])  && string[string.length-2] != '+' && string[string.length-2] != '-'){
-                if(string[string.length-1] == '-'){
-                    newString=string
-                } else {
-                    string=newString
-                }
-                
-            } else {
-                string = newString
+//onClick Event
+Array.from(buttons).forEach(button=>{
+    button.addEventListener('click',(e)=>{
+        append(e.target.value)
+        if(e.target.value == '='){
+            try{
+                string=eval(string)
+            } catch(err){
+                return string
             }
         }
-        
-    }
-    return string
-}
-
-function display(){
-    string=document.getElementById('output').value;
-     string=stringCheck(string);
-     document.getElementById('output').value=string;
-}
-
-Array.from(buttons).forEach(button=>{
-    //Adding event listener on each button click
-    button.addEventListener('click',(e)=>{
-        if(e.target.innerHTML=='='){
-            string=eval(string);
+        else if(e.target.value == 'C'){
+            string=string.substring(0,(string.length-1))
         }
-        else if(operator.includes(e.target.innerHTML)){
-            string+=e.target.innerHTML;
-              string= stringCheck(string);
+        else if(e.target.value == 'AC'){
+            string=""
         }
-        else if(e.target.innerHTML=='C'){
-               string=string.substr(0,(string.length-1))
-           }
-        else if(e.target.innerHTML=='AC'){
-            string="";
+        else if(e.target.value == '%'){
+            string=string/100;
         }
-        else if(e.target.value=='sqrt'){
-            let x=Number(string);
-            string=String(x*x);
+        else if(e.target.value == 'sqrt'){
+            string=eval(string*string)
         }
-        else{
-            string+=e.target.innerHTML;
+        else {
+            string+=e.target.value;
         }
-        document.getElementById('output').value=string;
+        document.getElementById('output').value=string
     })
 })
+
+// Creating string
+function append(value){
+    if(inputs.includes(value)){
+        if(operator.includes(value)&&  operator.includes(string[string.length-1])){
+                    string=string.substring(0,(string.length-1))
+        }
+        string+=value;
+    } 
+}
+
+// function evaluate(operation){
+//         if(operation == '='){
+//             string=eval(string)
+//         }
+//         else if(operation == 'C'){
+//             string=string.substring(0,(string.length-1))
+//         }
+//         else if(operation == 'AC'){
+//             string=""
+//         }
+//         else if(operation == '%'){
+//             string=string/100;
+//         }
+//         else if(operation == 'sqrt'){
+//             string=eval(string*string)
+//         }
+//         else {
+//             string+=operation;
+//         }
+//     console.log(string)
+// }
