@@ -1,99 +1,57 @@
 const buttons=document.getElementsByClassName('button');
 let string= document.getElementById("output").value || "";
 const operator=['+','-','*','/','%']
-const inputs=['1','2','3','4','5','6','7','8','9','0','+','-','*','/','%']
+const inputs=['1','2','3','4','5','6','7','8','9','0','+','-','*','/']
 
-//Event to focus on input field
+//keyDown Event 
 document.getElementById('body').addEventListener('keydown',(e)=>{
     document.getElementById('output').focus()
     append(e.key)
-    e.returnValue=false
-    // if(inputs.includes(e.key)){
-    // } 
-    // else{
-    //     e.returnValue=false
-    // }
+    evaluate(e.key)
 })
-
-//onKeyPress Event
-function keyboard(e){
-    if(inputs.includes(e.key)){
-        append(e.key)     
-    } 
-    else if(e.key=='Enter'){
-        try{
-            string=eval(string)
-        } catch(err){
-            return string
-        }
-    } 
-    else if(e.key=='Backspace'){
-        string=string.substring(0,(string.length-1))
-    } else{
-            e.returnValue=false
-        }
-    console.log(string);
-    document.getElementById('output').value=string
-}
 
 //onClick Event
 Array.from(buttons).forEach(button=>{
     button.addEventListener('click',(e)=>{
         append(e.target.value)
-        if(e.target.value == '='){
-            try{
-                string=eval(string)
-            } catch(err){
-                return string
-            }
-        }
-        else if(e.target.value == 'C'){
-            string=string.substring(0,(string.length-1))
-        }
-        else if(e.target.value == 'AC'){
-            string=""
-        }
-        else if(e.target.value == '%'){
-            string=string/100;
-        }
-        else if(e.target.value == 'sqrt'){
-            string=eval(string*string)
-        }
-        else {
-            string+=e.target.value;
-        }
-        document.getElementById('output').value=string
+        evaluate(e.target.value)
     })
 })
 
-// Creating string
+// Creating string Function
 function append(value){
+    console.log(value)
     if(inputs.includes(value)){
         if(operator.includes(value)&&  operator.includes(string[string.length-1])){
                     string=string.substring(0,(string.length-1))
         }
         string+=value;
-    } 
+    }
+    else if(value == "Backspace" || value == "C"){
+        string=string.substring(0,(string.length-1))
+    }
+    else if(value == "Delete" || value == "AC"){
+        string=""
+    }
+    document.getElementById('output').value=string
 }
 
-// function evaluate(operation){
-//         if(operation == '='){
-//             string=eval(string)
-//         }
-//         else if(operation == 'C'){
-//             string=string.substring(0,(string.length-1))
-//         }
-//         else if(operation == 'AC'){
-//             string=""
-//         }
-//         else if(operation == '%'){
-//             string=string/100;
-//         }
-//         else if(operation == 'sqrt'){
-//             string=eval(string*string)
-//         }
-//         else {
-//             string+=operation;
-//         }
-//     console.log(string)
-// }
+//Evaluation Function
+function evaluate(operation){
+    if(operation == "Enter" || operation == "="){
+        try{
+            string=eval(string)
+            string=String(string)
+        } catch(err){
+            return string
+        }
+    }
+    else if(operation == '%'){
+        string=Number(string)/100;
+    }
+    else if(operation == 'sqrt'){
+        string=eval(string*string)
+        string=String(string)
+    }
+    document.getElementById('output').value=string
+}
