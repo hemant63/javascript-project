@@ -1,0 +1,52 @@
+table {
+    width: 100%;
+    border-spacing: 10px;
+}
+
+#product{
+    padding: 0px 30px;
+}
+
+#header{
+    display: flex;
+    justify-content: space-between;
+    margin: -20px 10px;
+}
+
+#header p{
+    padding-top: 20px;
+    font-size: larger;
+    padding-right: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* h1{
+    padding: 0px 25px;
+    margin: auto;
+} */
+
+
+tr{
+    padding: 10px 0px !important;
+}
+
+td{
+    border: 1.5px solid black;
+}
+
+.content{
+    width: 100%;
+    padding-left: 40px;
+    
+}
+
+.text{
+    display: flex;
+    justify-content: space-between;
+}
+
+#image{
+    height: 200px;
+    width: 200px;
+}
