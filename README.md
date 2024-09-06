@@ -1,1 +1,1 @@
-Created a basic calculator by using the concept of html css and vanilla js. 
+Created a basic vanilla JS projects
