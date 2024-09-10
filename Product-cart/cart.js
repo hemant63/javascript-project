@@ -1,65 +1,58 @@
-
-const tbody=document.getElementById('tbody')
-const buttons=document.getElementsByClassName('remove');
-// var cartItems
-// (document.cookie)?  cartItems = JSON.parse(document.cookie) : cartItems=[]
-var cartItems=JSON.parse(document.cookie)
-
-console.log(cartItems)
-
-
-function createRow(item){
-    //<tr class="row">
-    const tr=document.createElement('tr')
-    tr.className="row"
-    tbody.appendChild(tr)
-    
-    //<td>
-    const td1=document.createElement('td')
-    tr.appendChild(td1)
-    
-    //<td class="content">
-    const td2=document.createElement('td')
-    td2.className="content"
-    tr.appendChild(td2)
-    
-    // <p id="name">
-    const p=document.createElement('p')
-    p.innerHTML=item?.name
-    p.id="name"
-    td2.appendChild(p)
-    
-    // <button>
-    const button=document.createElement('button');
-        button.innerHTML="Remove";
-        button.className="remove"; 
-        button.value=item?.id;
-    
-    td2.appendChild(button);
-    
-    //<img> 
-    const img=document.createElement('img')
-    img.id="image"
-    img.src=item?.image
-    td1.appendChild(img)  
+import products from "./products.json" with {type: "json"};
+const buttons=document.getElementsByClassName('Remove');
+var cart = []
+// Getting value from cookies
+function getCookies(name){
+    let newCart
+    const data = document.cookie.split(';')
+    data.forEach(value=>{
+        let v =value.split('=')
+        let keyName=v[0]
+        if(keyName.charAt(0)==' '){
+            keyName=keyName.substring(1)
+        }
+        if(name == keyName){
+            newCart = v[1].split(',')
+            cart = newCart
+        }
+    })
 }
 
-cartItems.map((item)=>{
-    createRow(item)
+getCookies("productId")
+
+console.log(cart)
+
+// getCookies("productId").then(
+//     function(value){
+//         console.log(value)
+//     },
+//     function(error){
+//         console.log(error)
+//     }
+// );
+
+products.map(item=>{
+    cart.map((id)=>{
+        if(item?.id == id)
+            createRow(item, "Remove")
+    })
 })
+
+// Delete items from cookie
+function deleteCookie(id){
+    let newCart=cart.filter(val=>{
+        return val != id
+    })
+    setCookies("productId",newCart,100)
+    console.log(newCart)
+}
+
+
+
+// Delete Event
 Array.from(buttons).forEach(button =>{
     button.addEventListener('click', (e)=>{
-        let newCart=[]
-     cartItems.map(item=>{
-      if(item?.id != e.target.value){
-        newCart=[...newCart, item]
-        }  
-    })
-    cartItems=newCart
-    console.log(cartItems)
-    document.cookie="  username= ; expires=Monday, 08 sept 2024 00:00:00 UTC; ";
-    console.log("cookie set")
-    console.log(document.cookie)
-    document.cookie=JSON.stringify(cartItems)
+        deleteCookie(e.target.value)
 })
 })
+
