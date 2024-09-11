@@ -1,7 +1,35 @@
 const tbody=document.getElementById('tbody')
 
+
+
+// setting value to cookies
+function setCookies(name, value, days){
+    const d = new Date()
+    d.setTime(d.getTime()+(days*24*60*60*1000))
+    document.cookie=`${name}=${value}; expires=${d.toUTCString()}; path=/`;
+}
+
+// Getting value from cookies
+ function getCookies(name){
+    let newCart
+    const data = document.cookie.split(';')
+    data.forEach(value=>{
+        let v =value.split('=')
+        let keyName=v[0]
+        if(keyName.charAt(0)==' '){
+            keyName=keyName.substring(1)
+        }
+        if(name == keyName){
+            newCart = v[1].split(',')
+        }
+    })
+    return  newCart
+}
+
+var cart = getCookies("productId")
+
 //Create Table
-function createRow(item,btnType){
+function createRow(item){
     //<tr class="row">
     const tr=document.createElement('tr')
     tr.className="row"
@@ -23,10 +51,15 @@ function createRow(item,btnType){
     td2.appendChild(p)
     
     // <button>
-    const button=document.createElement('button');
-    button.innerHTML=btnType;
-    button.className=btnType; 
+    const button=document.createElement('button'); 
         button.value=item?.id;
+        if(cart.includes(item?.id)){
+            button.innerHTML="Remove"
+            button.className="remove"
+        } else {
+            button.innerHTML="Add"
+            button.className="add"
+        }
     
     td2.appendChild(button);
     
@@ -37,10 +70,10 @@ function createRow(item,btnType){
     td1.appendChild(img)  
 }
 
-// setting value to cookies
-function setCookies(name, value, days){
-    const d = new Date()
-    d.setTime(d.getTime()+(days*24*60*60*1000))
-    document.cookie=`${name}=${value}; expires=${d.toUTCString()}; path=/`;
+// Delete items from cookie
+function deleteCookie(id){
+    let newCart=cart.filter(val=>{
+        return val != id
+    })
+    setCookies("productId",newCart,100)
 }
-
